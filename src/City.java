@@ -13,6 +13,7 @@ public class City {
 	private LinkedList<Street> street = new LinkedList<Street>();
 	private int zipCode;
 	private String name;
+	private double longitude, latitude;
 	
 	//Constructor
 	public City(String y, int x) {
@@ -44,5 +45,18 @@ public class City {
 	//toString method
 	public String toString() {
 		return this.name + ", " + this.zipCode;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public String getZipAsString() {
+		return String.valueOf(zipCode);
+	}
+	
+	public void setLatAndLong(double longit, double latit) {
+		this.longitude = longit;
+		this.latitude = latit;
 	}
 }
