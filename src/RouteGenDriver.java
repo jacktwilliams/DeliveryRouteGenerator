@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 
 /*
  * XP Programming - Route Generation Project
@@ -44,7 +45,7 @@ public class RouteGenDriver {
 		
 	}
 
-	//getCities method
+	//
 	public static LinkedList<City> getCities() throws FileNotFoundException{
 		
 		Scanner scan = new Scanner(new File("Address.dat"));
@@ -73,9 +74,8 @@ public class RouteGenDriver {
 		return cities;
 	}
 	
-	//getStreets method
+	//reads Layout.dat. Gets street information and fills adds those streets into the appropriate City.
 	public static void getStreets(LinkedList<City> cities) throws FileNotFoundException{
-		
 		Scanner read = new Scanner(new File("Layout.dat"));
 		
 		City current = null;
@@ -95,22 +95,24 @@ public class RouteGenDriver {
 				current.addStreet(new Street(line, vertical, order));
 				++order;
 			}
-			
 		}
 		read.close();
 	}
 	
+	//Sends request to Mapquest Geocoding API. Gets latitude and longitude for cities.
 	public static void fillCityLocations(LinkedList<City> cities) throws ClientProtocolException, IOException {
 		final String key = "jqAyJhhlsi2QQKdDQhPpM6vnVAnQcL9q";
 		String addr = "http://www.mapquestapi.com/geocoding/v1/batch?key=" + key;
 		
+		//construct a full address for a get request. This is a batch request. We will request location data for all cities at once.
+		//note that the number of cities must be less than 100 for a batch request. TODO?
 		for(City cit : cities) {
 			addr += "&location=" + cit.getName() + "," + cit.getZipAsString();
 		}
-		System.out.println(addr);
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(addr);
+		//response handler that returns JSON.
 		ResponseHandler<JsonObject> rh = new ResponseHandler<JsonObject>() {
 		    @Override
 		    public JsonObject handleResponse(final HttpResponse response) throws IOException {
@@ -133,10 +135,17 @@ public class RouteGenDriver {
 		};
 		JsonObject myjson = httpclient.execute(httpget, rh);
 		Gson gson = new Gson();
-		ArrayList results = gson.fromJson(myjson.get("results"), ArrayList.class);
+		@SuppressWarnings("rawtypes")
+		ArrayList results = gson.fromJson(myjson.get("results"), ArrayList.class); //one result for each city
 		
+		//for each result (and each city) parse out the latitude and longitude and fill in city properties.
 		for(int i = 0; i < results.size(); ++i) {
+			JsonObject result = gson.fromJson(gson.toJson(results.get(i)), JsonObject.class);
+			JsonObject latlng = result.getAsJsonArray("locations").get(0).getAsJsonObject().get("latLng").getAsJsonObject();
+			double latit = latlng.get("lat").getAsDouble();
+			double longit = latlng.get("lng").getAsDouble();
 			
+			cities.get(i).setLatAndLong(latit, longit);
 		}
 	}
 	
