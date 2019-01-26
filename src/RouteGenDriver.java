@@ -11,7 +11,6 @@ import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -19,9 +18,7 @@ import org.apache.http.impl.client.HttpClients;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.internal.LinkedTreeMap;
 
 /*
  * XP Programming - Route Generation Project
@@ -43,11 +40,13 @@ public class RouteGenDriver {
 		getStreets(c);
 		fillCityLocations(c);
 		
+		//got all data. Time to generate a route
+		PathFinder finder = new PathFinder();
+		finder.optimumPath(c);
 	}
 
 	//
 	public static LinkedList<City> getCities() throws FileNotFoundException{
-		
 		Scanner scan = new Scanner(new File("Address.dat"));
 		LinkedList<City> cities = new LinkedList<City>();
 		
@@ -148,5 +147,4 @@ public class RouteGenDriver {
 			cities.get(i).setLatAndLong(latit, longit);
 		}
 	}
-	
 }

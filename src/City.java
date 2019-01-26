@@ -15,23 +15,19 @@ public class City {
 	private String name;
 	private double longitude, latitude;
 	
-	//Constructor
 	public City(String y, int x) {
 		this.name = y;
 		this.zipCode = x;
 	}
 	
-	//addAddress method
 	public void addAddress(Address addy) {
 		addresses.add(addy);
 	}
 	
-	//addStreet method
 	public void addStreet(Street st) {
 		street.add(st);
 	}
 	
-	//equals method
 	public boolean equals(Object o) {
 		if(o == this) {
 			return true;
@@ -42,7 +38,6 @@ public class City {
 		return this.toString().equals(o.toString());
 	}
 	
-	//toString method
 	public String toString() {
 		return this.name + ", " + this.zipCode;
 	}
@@ -55,8 +50,19 @@ public class City {
 		return String.valueOf(zipCode);
 	}
 	
-	public void setLatAndLong(double longit, double latit) {
+	public void setLatAndLong(double latit, double longit) {
 		this.longitude = longit;
 		this.latitude = latit;
+	}
+	
+	public double[] getLatAndLong() {
+		double[] ret = {this.latitude, this.longitude};
+		return ret;
+	}
+	
+	public double getDistanceTo(City c) {
+		double[] otherLoc = c.getLatAndLong();
+		double otherLat = otherLoc[0], otherLong = otherLoc[1];
+		return Math.sqrt(Math.pow((this.latitude - otherLat), 2) + Math.pow((this.longitude - otherLong), 2));
 	}
 }
