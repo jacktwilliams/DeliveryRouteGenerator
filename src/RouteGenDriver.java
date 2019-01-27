@@ -34,15 +34,19 @@ public class RouteGenDriver {
 	public static void main(String[] args) throws ClientProtocolException, IOException {
 		// TODO Auto-generated method stub
 		
-		LinkedList<City> c = getCities();
-		System.out.println(c);
+		LinkedList<City> cities = getCities();
+		System.out.println(cities);
 		
-		getStreets(c);
-		fillCityLocations(c);
+		getStreets(cities);
+		fillCityLocations(cities);
 		
 		//got all data. Time to generate a route
 		PathFinder finder = new PathFinder();
-		finder.optimumPath(c);
+		finder.optimumPath(cities);
+		
+		for(City cit : cities) {
+			cit.sortAddresses();
+		}
 	}
 
 	//

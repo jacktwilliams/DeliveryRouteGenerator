@@ -10,7 +10,7 @@ import java.util.*;
 
 public class City {
 	private LinkedList<Address> addresses = new LinkedList<Address>();	
-	private LinkedList<Street> street = new LinkedList<Street>();
+	private LinkedList<Street> streets = new LinkedList<Street>();
 	private int zipCode;
 	private String name;
 	private double longitude, latitude;
@@ -25,7 +25,7 @@ public class City {
 	}
 	
 	public void addStreet(Street st) {
-		street.add(st);
+		streets.add(st);
 	}
 	
 	public String getName() {
@@ -50,6 +50,19 @@ public class City {
 		double[] otherLoc = c.getLatAndLong();
 		double otherLat = otherLoc[0], otherLong = otherLoc[1];
 		return Math.sqrt(Math.pow((this.latitude - otherLat), 2) + Math.pow((this.longitude - otherLong), 2));
+	}
+	
+	@SuppressWarnings("unchecked")
+	/* Sort our address list. Address implements Comparable.
+	 * We will first travel North to South. Then West to East. 
+	 */
+	public void sortAddresses() {
+		for(Address addr : this.addresses) {
+			Street holdsAddr = streets.get(streets.indexOf(new Street(addr.getStreetName()))); //TODO handle exception where index is -1. Street does not exist in layout file
+			addr.setStreetIndex(holdsAddr.getOrder());
+			addr.setVertical(holdsAddr.getVertical());
+		}
+		Collections.sort(addresses);
 	}
 	
 	public String toString() {
