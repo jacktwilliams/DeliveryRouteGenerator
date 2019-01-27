@@ -28,20 +28,6 @@ public class City {
 		street.add(st);
 	}
 	
-	public boolean equals(Object o) {
-		if(o == this) {
-			return true;
-		}
-		else if(!(o instanceof City)) {
-			return false;
-		}
-		return this.toString().equals(o.toString());
-	}
-	
-	public String toString() {
-		return this.name + ", " + this.zipCode;
-	}
-	
 	public String getName() {
 		return this.name;
 	}
@@ -64,5 +50,23 @@ public class City {
 		double[] otherLoc = c.getLatAndLong();
 		double otherLat = otherLoc[0], otherLong = otherLoc[1];
 		return Math.sqrt(Math.pow((this.latitude - otherLat), 2) + Math.pow((this.longitude - otherLong), 2));
+	}
+	
+	public String toString() {
+		return this.name + ", " + this.zipCode;
+	}
+	
+	public boolean equals(Object o) {
+		if(o == this) {
+			return true;
+		}
+		else if(!(o instanceof City)) {
+			return false;
+		}
+		return this.toString().equals(o.toString());
+	}
+	
+	public int hashCode() {
+		return this.toString().hashCode();
 	}
 }

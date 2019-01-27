@@ -19,16 +19,18 @@ public class Path {
 	
 	public String toString() {
 		String result = "";
-		for(City cit: this.cities) {
+		for(City cit: this.route) {
 			result = result + cit.getName() + " => ";
 		}
-		return result + "\n " + distance;
+		return result + distance + "\n";
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Path clone() {
 		Path copy = new Path();
 		copy.distance = this.distance;
-		copy.route = new LinkedList<City>(this.route);
+		copy.route = (LinkedList<City>) this.route.clone();
+		copy.cities = (HashSet<City>) this.cities.clone();
 		copy.full = this.full;
 		return copy;
 	}

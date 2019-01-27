@@ -31,7 +31,6 @@ public class PathFinder {
 		return shortest.route;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private boolean addToPaths() {
 		boolean additions = false; //assume all possible routes have been generated.
 		LinkedList<Path> newPaths = new LinkedList<Path>();
@@ -49,15 +48,16 @@ public class PathFinder {
 				 * Next, we will have to clone this route in order to create an alternative route where we go to a different city next.
 				 */
 				boolean haveUsedFirstPath = false;
+				Path toModify = path.clone(); //since we will be modifying the original path by adding stops, we save the original here as a template to add alternative stops to
 				for(City city: remaining) {
 					finished = false; //path not complete
 					additions = true; //all routes haven't been generated.
 					if(!haveUsedFirstPath) { 
-						path.addStop(city); //TODO: the first time around we are adding a city and then after that we are cloning the route with the first city already added and that seems erroneous. Don't want to lose this version of my code in case I am missing something since this code has been tested before.
+						path.addStop(city);
 						haveUsedFirstPath = true;
 					}
 					else {
-						Path toAdd = path.clone();
+						Path toAdd = toModify.clone();
 						toAdd.addStop(city);
 						newPaths.add(toAdd);
 					}
