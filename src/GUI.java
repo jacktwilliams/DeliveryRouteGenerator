@@ -38,7 +38,7 @@ public class GUI extends JFrame{
 		Font f1 = new Font("Arial", Font.BOLD, 20);
 		firstButton.setMinimumSize(d);
 		firstButton.setFont(f1);
-		firstButton.setToolTipText("CLICK HERE TO START THE GENERATOR");
+		firstButton.setToolTipText(GENHINT);
 		secondButton.setMaximumSize(d);
 		secondButton.setFont(f1);
 		secondButton.setToolTipText("[SELECTED]" + EXACTHINT);
@@ -66,7 +66,7 @@ public class GUI extends JFrame{
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		this.setResizable(true);
+		this.setResizable(false);
 		this.resetButton2();
 		JOptionPane.showMessageDialog(null, "Click any of the buttons to start the program\n"
 				+ "Hover over them to get a short description");
@@ -102,12 +102,12 @@ public class GUI extends JFrame{
 		resultPane.setText(s);
 	}
 	
-	//outputs to the screen in red
-	public void errorMessage(String s) {
-		resultPane.setForeground(Color.RED);
-		resultPane.setText(s);
+	public void appendOutput(String s) {
+		Font f2 = new Font("Arial", Font.PLAIN, 15);
+		resultPane.setFont(f2);
+		resultPane.setText(resultPane.getText() + s);
 	}
-	
+
 	public void setListener(Listener myList) {
 		l = myList;
 		

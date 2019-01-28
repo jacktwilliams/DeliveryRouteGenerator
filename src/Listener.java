@@ -30,17 +30,8 @@ public class Listener implements ActionListener {
 		if(text.equals("Start Generator")) {
 			g.setOutput(outPut);
 			g.disableGeneratorButton();
-			try {
-				RouteGenDriver.startRouteGeneration(g, exactLoc);
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				g.enableGeneratorButton();
-			}
+			RouteGenDriver.startRouteGeneration(g, exactLoc);
+			g.enableGeneratorButton();
 			
 		}else if(text.equals("Exact Location")) {
 			g.resetButton2();

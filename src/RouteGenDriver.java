@@ -30,6 +30,9 @@ import com.google.gson.JsonObject;
 
 
 public class RouteGenDriver {
+	
+	public static final String ADDRESSFILE = "Address.dat";
+	public static final String LAYOUTFILE = "Layout.dat";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -39,13 +42,38 @@ public class RouteGenDriver {
 		l.setGui(g);
 	}
 	
-	public static void startRouteGeneration(GUI g, boolean exactLoc) throws ClientProtocolException, IOException {
-		LinkedList<City> cities = getCities();
-		System.out.println(cities);
+	public static void startRouteGeneration(GUI g, boolean exactLoc) {
+		LinkedList<City> cities;
 		
-		getStreets(cities);
-		fillCityLocations(cities);
+		//read files and construct data
+		try {
+			cities = getCities();		
+		}catch(FileNotFoundException e) {
+			g.setOutput("**** File not found: " + ADDRESSFILE + "\n");
+			return;
+		}
+		try {
+			getStreets(cities);
+		}catch(FileNotFoundException e) {
+			g.setOutput("**** File not found: " + LAYOUTFILE + "\n");
+			return;
+		}catch(IndexOutOfBoundsException e) {
+			g.setOutput("**** A city listed in the layout file does not exist in the address file.\n");
+			return;
+		}
 		
+		//if exactLocationMode is on, fill in City lat and longitude properties.
+		if(exactLoc) {
+			try {
+				fillCityLocations(cities);
+			}catch(Exception e) {
+				g.setOutput("**** Unable to get exact coordinates of cities. This is likely a internet connectivity issue, or malformed city data in the address file." +
+						"Continuing with Approximate Location Mode.\n");
+				exactLoc = false;
+				g.resetButton3();
+			}
+		}
+
 		//got all data. Time to generate a route
 		PathFinder finder = new PathFinder(exactLoc); //this boolean is exactLocationMode. Get this from the gui or listener
 		LinkedList<City> shortestRoute = finder.optimumPath(cities);
@@ -54,19 +82,21 @@ public class RouteGenDriver {
 	}
 
 	private static void printRoute(LinkedList<City> route, GUI g) {
-		String output = "";
 		for(City cit : route) {
-			output += cit.toString() + "\n";
+			g.appendOutput(cit.toString() + "\n");
 			//try sort Addresses, catch Exceptions and print the message.
-			cit.sortAddresses();
-			output += cit.getAddressesAsString();
+			try {
+				cit.sortAddresses();
+			} catch(Exception e) {
+				g.appendOutput("****" + e.getMessage() + "\n"); //the message should be about addresses which have streets that don't exist in the layout file. 
+			}
+			g.appendOutput(cit.getAddressesAsString());
 		}
-		g.setOutput(output);
 	}
 
 	//reads address.dat. Creates cities and fills those cities with houses.
 	public static LinkedList<City> getCities() throws FileNotFoundException{
-		Scanner scan = new Scanner(new File("Address.dat"));
+		Scanner scan = new Scanner(new File(ADDRESSFILE));
 		LinkedList<City> cities = new LinkedList<City>();
 		
 		while(scan.hasNextLine()) {
@@ -94,7 +124,7 @@ public class RouteGenDriver {
 	
 	//reads Layout.dat. Gets street information and fills adds those streets into the appropriate City.
 	public static void getStreets(LinkedList<City> cities) throws FileNotFoundException{
-		Scanner read = new Scanner(new File("Layout.dat"));
+		Scanner read = new Scanner(new File(LAYOUTFILE));
 		
 		City current = null;
 		boolean vertical = false;

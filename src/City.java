@@ -60,13 +60,27 @@ public class City {
 	/* Sort our address list. Address implements Comparable.
 	 * We will first travel North to South. Then West to East. 
 	 */
-	public void sortAddresses() {
+	public void sortAddresses() throws Exception {
+		String badAddresses = "";
 		for(Address addr : this.addresses) {
-			Street holdsAddr = streets.get(streets.indexOf(new Street(addr.getStreetName()))); //TODO handle exception where index is -1. Street does not exist in layout file
-			addr.setStreetIndex(holdsAddr.getOrder());
-			addr.setVertical(holdsAddr.getVertical());
+			Street holdsAddr; // will be filled with the street that this address is on.
+			Street addrStreetName = new Street(addr.getStreetName());
+			try {
+				holdsAddr = streets.get(streets.indexOf(addrStreetName));
+				addr.setStreetIndex(holdsAddr.getOrder());
+				addr.setVertical(holdsAddr.getVertical());
+			} catch(Exception e) {
+				badAddresses += "Address: \"" + addr + "\" does not sit upon a street defined in the Layout file." + 
+						"We will place this address at the end of the route for this city.";
+				addr.setStreetIndex(Integer.MAX_VALUE);
+				addr.setVertical(false); //horizontals go last
+			}
 		}
 		Collections.sort(addresses);
+		
+		if(!badAddresses.equals("")) { //if we caught any bad addresses
+			throw new Exception(badAddresses);
+		}
 	}
 	
 	public String toString() {
