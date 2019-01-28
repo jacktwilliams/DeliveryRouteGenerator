@@ -4,17 +4,47 @@ import java.util.LinkedList;
 
 //TODO: many fields should be private.
 public class Path {
-	public LinkedList<City> route = new LinkedList<City>();
-	public HashSet<City> cities = new HashSet<City>();
-	public double distance = 0;
-	public boolean full = false;
+	private LinkedList<City> route = new LinkedList<City>();
+	private HashSet<City> cities = new HashSet<City>();
+	private double distance = 0;
+	private boolean full = false;
+	private boolean exactLocation;
+	
+	public Path(boolean exact) {
+		this.exactLocation = exact;
+	}
 	
 	public void addStop(City stop) {
 		cities.add(stop);
 		route.add(stop);
 		if(route.size() >= 2) { //as long as we now have two cities
-			distance += route.get(route.size() - 2).getDistanceTo(stop);
+			if(this.exactLocation) {
+				distance += route.get(route.size() - 2).getDistanceTo(stop);
+			}
+			else { //approximate distance based on zip codes
+				distance += Math.abs(route.get(route.size() - 2).getZip() - stop.getZip());
+			}
 		}
+	}
+	
+	public double getDistance() {
+		return this.distance;
+	}
+	
+	public boolean getFullPathP () { //full path predicate
+		return this.full;
+	}
+	
+	public void setFullPathP (boolean f) {
+		this.full = f;
+	}
+	
+	public LinkedList<City> getRoute() {
+		return this.route;
+	}
+	
+	public HashSet<City> getCities() {
+		return this.cities;
 	}
 	
 	public String toString() {
@@ -27,7 +57,7 @@ public class Path {
 	
 	@SuppressWarnings("unchecked")
 	public Path clone() {
-		Path copy = new Path();
+		Path copy = new Path(this.exactLocation);
 		copy.distance = this.distance;
 		copy.route = (LinkedList<City>) this.route.clone();
 		copy.cities = (HashSet<City>) this.cities.clone();

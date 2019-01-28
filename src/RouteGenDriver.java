@@ -31,9 +31,15 @@ import com.google.gson.JsonObject;
 
 public class RouteGenDriver {
 
-	public static void main(String[] args) throws ClientProtocolException, IOException {
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
+		GUI g = new GUI();
+		Listener l = new Listener();
+		g.setListener(l);
+		l.setGui(g);
+	}
+	
+	public static void startRouteGeneration(GUI g, boolean exactLoc) throws ClientProtocolException, IOException {
 		LinkedList<City> cities = getCities();
 		System.out.println(cities);
 		
@@ -41,15 +47,24 @@ public class RouteGenDriver {
 		fillCityLocations(cities);
 		
 		//got all data. Time to generate a route
-		PathFinder finder = new PathFinder();
-		finder.optimumPath(cities);
+		PathFinder finder = new PathFinder(exactLoc); //this boolean is exactLocationMode. Get this from the gui or listener
+		LinkedList<City> shortestRoute = finder.optimumPath(cities);
 		
-		for(City cit : cities) {
-			cit.sortAddresses();
-		}
+		printRoute(shortestRoute, g);
 	}
 
-	//
+	private static void printRoute(LinkedList<City> route, GUI g) {
+		String output = "";
+		for(City cit : route) {
+			output += cit.toString() + "\n";
+			//try sort Addresses, catch Exceptions and print the message.
+			cit.sortAddresses();
+			output += cit.getAddressesAsString();
+		}
+		g.setOutput(output);
+	}
+
+	//reads address.dat. Creates cities and fills those cities with houses.
 	public static LinkedList<City> getCities() throws FileNotFoundException{
 		Scanner scan = new Scanner(new File("Address.dat"));
 		LinkedList<City> cities = new LinkedList<City>();

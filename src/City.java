@@ -36,6 +36,10 @@ public class City {
 		return String.valueOf(zipCode);
 	}
 	
+	public int getZip() {
+		return this.zipCode;
+	}
+	
 	public void setLatAndLong(double latit, double longit) {
 		this.longitude = longit;
 		this.latitude = latit;
@@ -67,6 +71,18 @@ public class City {
 	
 	public String toString() {
 		return this.name + ", " + this.zipCode;
+	}
+	
+	public LinkedList<Address> getAddresses() {
+		return this.addresses;
+	}
+	
+	public String getAddressesAsString() {
+		String result = "";
+		for(Address addr : this.addresses) {
+			result += "    " + addr.toString() + "\n"; //primitive formatting...
+		}
+		return result;
 	}
 	
 	public boolean equals(Object o) {
