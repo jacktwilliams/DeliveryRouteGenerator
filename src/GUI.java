@@ -17,6 +17,7 @@ public class GUI extends JFrame{
 	
 	private JPanel topPanel = new JPanel();
 	private JTextPane resultPane = new JTextPane();
+	JScrollPane scroll = new JScrollPane(resultPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	private JButton firstButton = new JButton("Start Generator");
 	private JButton secondButton = new JButton("Exact Location");
 	private JButton thirdButton = new JButton("Approximate Location");
@@ -28,7 +29,7 @@ public class GUI extends JFrame{
 	public GUI() {
 		
 		//Frame
-		this.setSize(900, 500);
+		this.setSize(1000, 800);
 		this.setTitle("Route Generator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -46,18 +47,19 @@ public class GUI extends JFrame{
 		thirdButton.setToolTipText(APPROXHINT);
 		
 		//Top Panel layout
-		topPanel.setPreferredSize(new Dimension(620, 50));
+		topPanel.setPreferredSize(new Dimension(1200, 60));
 		topPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		topPanel.add(firstButton);
 		topPanel.add(secondButton);
 		topPanel.add(thirdButton);
 		
 		//result TextPane layout
-		resultPane.setPreferredSize(new Dimension(250, 400));
+		resultPane.setPreferredSize(new Dimension(500, 800));
 		resultPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
 		//BorderLayout
 		this.setLayout(new BorderLayout());
+		this.getContentPane().add(scroll);
 		getContentPane().add(BorderLayout.NORTH, topPanel);
 		getContentPane().add(BorderLayout.SOUTH, resultPane);
 		
@@ -78,6 +80,7 @@ public class GUI extends JFrame{
 		firstButton.setEnabled(true);
 	}
 	
+	//disables Exact location button
 	public void resetButton2() {
 		secondButton.setEnabled(false);
 		secondButton.setToolTipText("[SELECTED]" + EXACTHINT);
@@ -85,6 +88,7 @@ public class GUI extends JFrame{
 		thirdButton.setToolTipText(APPROXHINT);
 	}
 	
+	//disables approximate location button
 	public void resetButton3() {
 		secondButton.setEnabled(true);
 		secondButton.setToolTipText(EXACTHINT);
@@ -92,14 +96,18 @@ public class GUI extends JFrame{
 		thirdButton.setToolTipText("[SELECTED]" + APPROXHINT);
 	}
 	
-	//Output String method
 	public void setOutput(String s) {
 		Font f2 = new Font("Arial", Font.PLAIN, 15);
 		resultPane.setFont(f2);
 		resultPane.setText(s);
 	}
 	
-	//
+	//outputs to the screen in red
+	public void errorMessage(String s) {
+		resultPane.setForeground(Color.RED);
+		resultPane.setText(s);
+	}
+	
 	public void setListener(Listener myList) {
 		l = myList;
 		
