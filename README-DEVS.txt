@@ -2,7 +2,7 @@ Documentation for Developers
 
 The application's main class in RouteGenDriver. The main method here starts up the GUI and a listener for that interface. When the Route Generator is started, RouteGenDriver's method startRouteGeneration is called. The rest of the functionality can be traced from here.
 
-There are two main chokepoints of the application. We use a brute-force algorithm for finding the optimum route between cities. This algorithm has a growth-complexity of O(n!).
+There are two main chokepoints of the application. We use a brute-force algorithm for finding the optimal route between cities. This algorithm has a growth-complexity of O(n!). This only applies if "Optimal Route" is selected.
 
 The other chokepoint is when the Java Collection class sorts our cities' addresses. This takes unreasonably long once you get close to around 100,000 addresses per city.
 

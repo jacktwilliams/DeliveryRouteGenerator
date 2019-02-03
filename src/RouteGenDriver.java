@@ -31,8 +31,8 @@ import com.google.gson.JsonObject;
 
 public class RouteGenDriver {
 	
-	public static final String ADDRESSFILE = "AddressBig.dat";
-	public static final String LAYOUTFILE = "LayoutBig.dat";
+	public static final String ADDRESSFILE = "AddressMed.dat";
+	public static final String LAYOUTFILE = "LayoutMed.dat";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -90,18 +90,25 @@ public class RouteGenDriver {
 		
 		printRoute(shortestRoute, g);
 	}
-
+	
+	//Last step in route generation. Print results.
 	private static void printRoute(LinkedList<City> route, GUI g) {
+		String fullResult = "";
+		String justCities = "";
 		for(City cit : route) {
-			g.appendOutput(cit.toString() + "\n");
+			fullResult += cit.toString() + "\n";
+			justCities += cit.toString() + "\n";
 			//try sort Addresses, catch Exceptions and print the message.
 			try {
 				cit.sortAddresses();
 			} catch(Exception e) {
-				g.appendOutput("****" + e.getMessage() + "\n"); //the message should be about addresses which have streets that don't exist in the layout file. 
+				fullResult += "****" + e.getMessage() + "\n"; //the message should be about addresses which have streets that don't exist in the layout file. 
 			}
-			g.appendOutput(cit.getAddressesAsString());
+			fullResult += cit.getAddressesAsString();
 		}
+		g.appendOutput(justCities + "\n\n");
+		g.appendOutput(fullResult);
+		System.out.println(justCities);
 	}
 
 	//reads address.dat. Creates cities and fills those cities with houses.
