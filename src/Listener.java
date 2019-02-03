@@ -42,7 +42,7 @@ public class Listener implements ActionListener {
 			g.resetButton3();
 			exactLoc = false;
 		}
-		else if(text.equals("Best Route")) {
+		else if(text.equals("Optimum Route")) {
 			g.selectBestB();
 			bestRoute = true;
 		}

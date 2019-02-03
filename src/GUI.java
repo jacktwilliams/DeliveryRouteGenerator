@@ -55,7 +55,7 @@ public class GUI extends JFrame{
 		thirdButton.setToolTipText(APPROXHINT);
 		bestRouteB.setMaximumSize(d);
 		bestRouteB.setFont(f1);
-		bestRouteB.setToolTipText(BESTHINT);
+		bestRouteB.setToolTipText("[SELECTED]" + BESTHINT);
 		heuristicsB.setMaximumSize(d);
 		heuristicsB.setFont(f1);
 		heuristicsB.setToolTipText(HEURISTICHINT);
@@ -127,12 +127,16 @@ public class GUI extends JFrame{
 	
 	public void selectBestB() {
 		bestRouteB.setEnabled(false);
+		bestRouteB.setToolTipText("[SELECTED]" + BESTHINT);
 		heuristicsB.setEnabled(true);
+		heuristicsB.setToolTipText(HEURISTICHINT);
 	}
 	
 	public void selectHeuristicsB() {
 		heuristicsB.setEnabled(false);
+		heuristicsB.setToolTipText("[SELECTED]" + HEURISTICHINT);
 		bestRouteB.setEnabled(true);
+		bestRouteB.setToolTipText(BESTHINT);
 	}
 	
 	public void setOutput(String s) {
@@ -153,6 +157,8 @@ public class GUI extends JFrame{
 		firstButton.addActionListener(myList);
 		secondButton.addActionListener(myList);
 		thirdButton.addActionListener(myList);
+		bestRouteB.addActionListener(myList);
+		heuristicsB.addActionListener(myList);
 	}
 	
 }

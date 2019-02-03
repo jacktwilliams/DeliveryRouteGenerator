@@ -78,7 +78,15 @@ public class RouteGenDriver {
 
 		//got all data. Time to generate a route
 		PathFinder finder = new PathFinder(cities, exactLoc, bestRoute);
-		LinkedList<City> shortestRoute = finder.findPath();
+		LinkedList<City> shortestRoute;
+		try {
+			shortestRoute = finder.findPath();
+		} catch(OutOfMemoryError e) {
+			g.appendOutput("**** Ran out of memory looking for best route. Using Heuristics.\n");
+			finder = null;
+			finder = new PathFinder(cities, exactLoc, false);
+			shortestRoute = finder.findPath();
+		}
 		
 		printRoute(shortestRoute, g);
 	}

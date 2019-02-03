@@ -28,7 +28,7 @@ public class PathFinder {
 		Path resultRoute = new Path(exactLocMode);
 		
 		resultRoute.addStop(cities.get(0)); //start with first city
-		HashSet<City> remaining = new HashSet<City>(resultRoute.getCities());
+		HashSet<City> remaining = new HashSet<City>(cities);
 		remaining.remove(cities.get(0));
 		do {
 			City closest = null;
