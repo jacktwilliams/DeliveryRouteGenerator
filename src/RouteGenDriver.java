@@ -42,7 +42,8 @@ public class RouteGenDriver {
 		l.setGui(g);
 	}
 	
-	public static void startRouteGeneration(GUI g, boolean exactLoc) {
+	//exactLoc says whether to get location coordinates from the web. bestRoute says whether to test every route or use heuristics
+	public static void startRouteGeneration(GUI g, boolean exactLoc, boolean bestRoute) {
 		LinkedList<City> cities;
 		
 		//read files and construct data
@@ -75,8 +76,8 @@ public class RouteGenDriver {
 		}
 
 		//got all data. Time to generate a route
-		PathFinder finder = new PathFinder(exactLoc); //this boolean is exactLocationMode. Get this from the gui or listener
-		LinkedList<City> shortestRoute = finder.optimumPath(cities);
+		PathFinder finder = new PathFinder(cities, exactLoc, bestRoute);
+		LinkedList<City> shortestRoute = finder.findPath();
 		
 		printRoute(shortestRoute, g);
 	}

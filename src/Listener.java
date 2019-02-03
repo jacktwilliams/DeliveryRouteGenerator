@@ -19,6 +19,7 @@ import org.apache.http.client.ClientProtocolException;
 
 public class Listener implements ActionListener {
 	private boolean exactLoc = true;
+	private boolean bestRoute = true;
 	private GUI g;
 	
 	@Override
@@ -30,7 +31,7 @@ public class Listener implements ActionListener {
 		if(text.equals("Start Generator")) {
 			g.setOutput(outPut);
 			g.disableGeneratorButton();
-			RouteGenDriver.startRouteGeneration(g, exactLoc);
+			RouteGenDriver.startRouteGeneration(g, exactLoc, bestRoute);
 			g.enableGeneratorButton();
 			
 		}else if(text.equals("Exact Location")) {
@@ -40,6 +41,14 @@ public class Listener implements ActionListener {
 		}else if(text.equals("Approximate Location")) {
 			g.resetButton3();
 			exactLoc = false;
+		}
+		else if(text.equals("Best Route")) {
+			g.selectBestB();
+			bestRoute = true;
+		}
+		else if(text.equals("Use Heuristics")) {
+			g.selectHeuristicsB();
+			bestRoute = false;
 		}
 	}
 	

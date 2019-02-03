@@ -21,10 +21,14 @@ public class GUI extends JFrame{
 	private JButton firstButton = new JButton("Start Generator");
 	private JButton secondButton = new JButton("Exact Location");
 	private JButton thirdButton = new JButton("Approximate Location");
+	private JButton bestRouteB = new JButton("Optimum Route");
+	private JButton heuristicsB = new JButton("Use Heuristics");
 	
 	private final String EXACTHINT = "Exact Location Mode uses the internet to find the coordinates of each city. It is guaranteed to produce the shortest route between cities.";
 	private final String APPROXHINT = "Approximate Location Mode approximates distances between cities using zip codes. This will work regardless of internet connection.";
 	private final String GENHINT = "Read Address and Layout files and produce a delivery route.";
+	private final String BESTHINT = "Checks every possible route to find the best route between cities.";
+	private final String HEURISTICHINT = "Uses heuristics to find a good route. Useful for 10+ cities.";
 	
 	public GUI() {
 		
@@ -45,6 +49,12 @@ public class GUI extends JFrame{
 		thirdButton.setMaximumSize(d);
 		thirdButton.setFont(f1);
 		thirdButton.setToolTipText(APPROXHINT);
+		bestRouteB.setMaximumSize(d);
+		bestRouteB.setFont(f1);
+		bestRouteB.setToolTipText(BESTHINT);
+		heuristicsB.setMaximumSize(d);
+		heuristicsB.setFont(f1);
+		heuristicsB.setToolTipText(HEURISTICHINT);
 		
 		//Top Panel layout
 		topPanel.setPreferredSize(new Dimension(1200, 60));
@@ -52,6 +62,8 @@ public class GUI extends JFrame{
 		topPanel.add(firstButton);
 		topPanel.add(secondButton);
 		topPanel.add(thirdButton);
+		topPanel.add(bestRouteB);
+		topPanel.add(heuristicsB);
 		
 		//result TextPane layout
 		resultPane.setPreferredSize(new Dimension(500, 800));
@@ -67,9 +79,12 @@ public class GUI extends JFrame{
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.setResizable(false);
-		this.resetButton2();
 		JOptionPane.showMessageDialog(null, "Click any of the buttons to start the program\n"
 				+ "Hover over them to get a short description");
+		
+		//start with exactLocation and Best Route Selected
+		this.resetButton2();
+		this.selectBestB();
 	}
 	
 	public void disableGeneratorButton() {
@@ -94,6 +109,16 @@ public class GUI extends JFrame{
 		secondButton.setToolTipText(EXACTHINT);
 		thirdButton.setEnabled(false);
 		thirdButton.setToolTipText("[SELECTED]" + APPROXHINT);
+	}
+	
+	public void selectBestB() {
+		bestRouteB.setEnabled(false);
+		heuristicsB.setEnabled(true);
+	}
+	
+	public void selectHeuristicsB() {
+		heuristicsB.setEnabled(false);
+		bestRouteB.setEnabled(true);
 	}
 	
 	public void setOutput(String s) {

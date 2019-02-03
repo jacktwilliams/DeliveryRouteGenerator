@@ -6,14 +6,55 @@ public class PathFinder {
 	private LinkedList<Path> paths = new LinkedList<Path>();
 	private LinkedList<City> cities;
 	private boolean exactLocMode;
+	private boolean bestRoute;
 	
-	public PathFinder(boolean exact) {
+	public PathFinder(LinkedList<City> cities, boolean exact, boolean bestRoute) {
 		this.exactLocMode = exact;
+		this.bestRoute = bestRoute;
+		this.cities = cities;
 	}
 	
-	public LinkedList<City> optimumPath(LinkedList<City> cities) {
-		this.cities = cities;
+	public LinkedList<City> findPath() {
+		if(this.bestRoute) {
+			return this.optimumPath();
+		}
+		else {
+			return this.heuristicPath();
+		}
+	}
+	
+	//uses nearest neighbor heuristic to find a route
+	private LinkedList<City> heuristicPath() {
+		Path resultRoute = new Path(exactLocMode);
+		
+		resultRoute.addStop(cities.get(0)); //start with first city
+		HashSet<City> remaining = new HashSet<City>(resultRoute.getCities());
+		remaining.remove(cities.get(0));
+		do {
+			City closest = null;
+			double closestDist = Double.MAX_VALUE;
+			
+			for (City cit : remaining) {
+				double distance;
+				if(exactLocMode) {
+					distance = resultRoute.getRoute().getLast().getDistanceTo(cit);
+				}
+				else {
+					distance = resultRoute.getRoute().getLast().getDistanceUsingZipCodes(cit);
+				}
+				
+				if(distance < closestDist) {
+					closest = cit;
+				}
+			}
+			resultRoute.addStop(closest);
+			remaining.remove(closest);
+		} while(remaining.size() > 0);
+		
+		return resultRoute.getRoute();
+	}
 
+	private LinkedList<City> optimumPath() {
 		//initialize routes. One route starting at each city. 
 		for(int i = 0; i < cities.size(); ++i) {
 			Path newPath = new Path(this.exactLocMode);
@@ -47,8 +88,7 @@ public class PathFinder {
 				boolean finished = true; //assume this path is complete (assume we have been to all cities).
 				
 				//find cities which we haven't traveled to yet.
-				HashSet<City> remaining = new HashSet<City>(cities);
-				remaining.removeAll(path.getCities());
+				HashSet<City> remaining = getRemainingCities(path);
 				
 				/* For every city that hasn't been traveled to in this path, we will generate a new route in which that city is traveled to next.
 				 * First we will use the path object we are looking at currently. In other words, we will add the city to this route.
@@ -76,5 +116,11 @@ public class PathFinder {
 			paths.add(newP);
 		}
 		return additions;
+	}
+	
+	private HashSet<City> getRemainingCities(Path p) {
+		HashSet<City> remaining = new HashSet<City>(cities);
+		remaining.removeAll(p.getCities());
+		return remaining;
 	}
 }

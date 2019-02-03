@@ -22,7 +22,7 @@ public class Path {
 				distance += route.get(route.size() - 2).getDistanceTo(stop);
 			}
 			else { //approximate distance based on zip codes
-				distance += Math.abs(route.get(route.size() - 2).getZip() - stop.getZip());
+				distance += route.get(route.size() - 2).getDistanceUsingZipCodes(stop);
 			}
 		}
 	}

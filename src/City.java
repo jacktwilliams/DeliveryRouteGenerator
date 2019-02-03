@@ -56,6 +56,10 @@ public class City {
 		return Math.sqrt(Math.pow((this.latitude - otherLat), 2) + Math.pow((this.longitude - otherLong), 2));
 	}
 	
+	public double getDistanceUsingZipCodes(City c) {
+		return Math.sqrt(Math.pow((this.zipCode - c.getZip()), 2) + Math.pow((this.zipCode - c.getZip()), 2));
+	}
+	
 	@SuppressWarnings("unchecked")
 	/* Sort our address list. Address implements Comparable.
 	 * We will first travel North to South. Then West to East. 
