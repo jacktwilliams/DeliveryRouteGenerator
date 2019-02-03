@@ -31,8 +31,8 @@ import com.google.gson.JsonObject;
 
 public class RouteGenDriver {
 	
-	public static final String ADDRESSFILE = "Address.dat";
-	public static final String LAYOUTFILE = "Layout.dat";
+	public static final String ADDRESSFILE = "AddressBig.dat";
+	public static final String LAYOUTFILE = "LayoutBig.dat";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -70,6 +70,7 @@ public class RouteGenDriver {
 			}catch(Exception e) {
 				g.setOutput("**** Unable to get exact coordinates of cities. This is likely a internet connectivity issue, or malformed city data in the address file." +
 						"Continuing with Approximate Location Mode.\n");
+				System.out.println("Error retrieving exact location data: " + e.getMessage());
 				exactLoc = false;
 				g.resetButton3();
 			}
@@ -156,7 +157,7 @@ public class RouteGenDriver {
 		//construct a full address for a get request. This is a batch request. We will request location data for all cities at once.
 		//note that the number of cities must be less than 100 for a batch request. TODO?
 		for(City cit : cities) {
-			addr += "&location=" + cit.getName() + "," + cit.getZipAsString();
+			addr += "&location=" + cit.getName().replaceAll(" ",  "") + "," + cit.getZipAsString();
 		}
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -188,6 +189,7 @@ public class RouteGenDriver {
 		ArrayList results = gson.fromJson(myjson.get("results"), ArrayList.class); //one result for each city
 		
 		//for each result (and each city) parse out the latitude and longitude and fill in city properties.
+		//TODO: improvement: Alert user / do something if the api returns lat and lang for a different city. It seems to pick the most similar city if you use faulty data.
 		for(int i = 0; i < results.size(); ++i) {
 			JsonObject result = gson.fromJson(gson.toJson(results.get(i)), JsonObject.class);
 			JsonObject latlng = result.getAsJsonArray("locations").get(0).getAsJsonObject().get("latLng").getAsJsonObject();

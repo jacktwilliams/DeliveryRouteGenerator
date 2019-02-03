@@ -74,7 +74,7 @@ public class PathFinder {
 			}
 		}
 		
-		System.out.println(shortest);
+		System.out.println("Shortest Path: " + shortest);
 		return shortest.getRoute();
 	}
 	

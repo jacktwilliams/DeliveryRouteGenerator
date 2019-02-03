@@ -10,12 +10,16 @@
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame{
 	Listener l;
 	
 	private JPanel topPanel = new JPanel();
+	private JPanel botPanel = new JPanel();
 	private JTextPane resultPane = new JTextPane();
 	JScrollPane scroll = new JScrollPane(resultPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	private JButton firstButton = new JButton("Start Generator");
@@ -33,7 +37,7 @@ public class GUI extends JFrame{
 	public GUI() {
 		
 		//Frame
-		this.setSize(1000, 800);
+		this.setSize(1200, 1000);
 		this.setTitle("Route Generator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -58,22 +62,32 @@ public class GUI extends JFrame{
 		
 		//Top Panel layout
 		topPanel.setPreferredSize(new Dimension(1200, 60));
-		topPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		//topPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 		topPanel.add(firstButton);
 		topPanel.add(secondButton);
 		topPanel.add(thirdButton);
 		topPanel.add(bestRouteB);
 		topPanel.add(heuristicsB);
 		
-		//result TextPane layout
-		resultPane.setPreferredSize(new Dimension(500, 800));
-		resultPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		//Botton Panel Layout
+		botPanel.setPreferredSize(new Dimension(100, 450));
+		//botPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+		botPanel.add(scroll);
+		
+		//Result textpane Layout
+		//resultPane.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+		resultPane.setPreferredSize(new Dimension(1195, 435));
+		
+		//resultPane text center alignment
+		StyledDocument doc = resultPane.getStyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		
 		//BorderLayout
 		this.setLayout(new BorderLayout());
-		this.getContentPane().add(scroll);
-		getContentPane().add(BorderLayout.NORTH, topPanel);
-		getContentPane().add(BorderLayout.SOUTH, resultPane);
+		this.getContentPane().add(BorderLayout.NORTH, topPanel);
+		this.getContentPane().add(BorderLayout.SOUTH, botPanel);
 		
 		this.pack();
 		this.setLocationRelativeTo(null);
